@@ -1,0 +1,6 @@
+@use '../abstracts' as *;
+
+body {
+  font-family: $font-family-sans;
+  line-height: $line-height-base;
+}
