@@ -1,0 +1,93 @@
+<div class="data-table__scroll" role="region" tabindex="0" [attr.aria-label]="caption()">
+  <table class="data-table">
+    <caption>
+      {{
+        caption()
+      }}
+    </caption>
+    <thead>
+      <tr>
+        @if (selectionEnabled()) {
+          <th class="data-table__selection" scope="col">
+            <input
+              type="checkbox"
+              [checked]="allRowsSelected()"
+              [indeterminate]="someRowsSelected() && !allRowsSelected()"
+              [disabled]="rows().length === 0 || loading()"
+              aria-label="Select all visible rows"
+              (change)="toggleAllRows()"
+            />
+          </th>
+        }
+        @for (column of columns(); track column.key) {
+          <th scope="col" [attr.aria-sort]="ariaSort(column.key)">
+            @if (column.sortable) {
+              <button
+                class="data-table__sort"
+                type="button"
+                [attr.aria-label]="'Sort by ' + column.label"
+                (click)="toggleSort(column.key)"
+              >
+                {{ column.label }}
+                <span aria-hidden="true">{{
+                  ariaSort(column.key) === 'descending' ? '↓' : '↕'
+                }}</span>
+              </button>
+            } @else {
+              {{ column.label }}
+            }
+          </th>
+        }
+        @if (actions().length > 0) {
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading()) {
+        <tr>
+          <td [attr.colspan]="columnSpan()" role="status">{{ loadingLabel() }}</td>
+        </tr>
+      } @else if (rows().length === 0) {
+        <tr>
+          <td [attr.colspan]="columnSpan()">{{ emptyMessage() }}</td>
+        </tr>
+      } @else {
+        @for (row of sortedRows(); track keyFor(row)) {
+          <tr>
+            @if (selectionEnabled()) {
+              <td class="data-table__selection">
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(row)"
+                  [attr.aria-label]="'Select row ' + keyFor(row)"
+                  (change)="toggleRow(row)"
+                />
+              </td>
+            }
+            @for (column of columns(); track column.key) {
+              <td>{{ displayValue(row, column) }}</td>
+            }
+            @if (actions().length > 0) {
+              <td class="data-table__actions">
+                <div class="data-table__action-group">
+                  @for (action of actions(); track action.id) {
+                    <button
+                      class="data-table__action"
+                      [class.data-table__action--danger]="action.variant === 'danger'"
+                      type="button"
+                      [attr.aria-label]="action.label + ' for row ' + keyFor(row)"
+                      (click)="selectAction(action.id, row)"
+                    >
+                      {{ action.label }}
+                    </button>
+                  }
+                </div>
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

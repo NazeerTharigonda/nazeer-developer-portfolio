@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'link';
+export type ButtonVariant =
+  'primary' | 'secondary' | 'outline' | 'ghost' | 'text' | 'danger' | 'success' | 'link';
 export type ButtonSize = 'small' | 'medium' | 'large';
 
 @Component({
@@ -8,6 +9,7 @@ export type ButtonSize = 'small' | 'medium' | 'large';
   template: `
     <button
       [class]="'button button--' + variant() + ' button--' + size()"
+      [class.button--full-width]="fullWidth()"
       [type]="type()"
       [disabled]="disabled() || loading()"
       [attr.aria-busy]="loading()"
@@ -55,7 +57,8 @@ export type ButtonSize = 'small' | 'medium' | 'large';
       cursor: not-allowed;
     }
 
-    .button--link:disabled {
+    .button--link:disabled,
+    .button--text:disabled {
       background: transparent;
       border-color: transparent;
     }
@@ -104,12 +107,34 @@ export type ButtonSize = 'small' | 'medium' | 'large';
       background: var(--color-danger-hover);
     }
 
-    .button--link {
+    .button--success {
+      color: var(--color-text-on-success);
+      background: var(--color-success);
+    }
+
+    .button--success:hover:not(:disabled) {
+      background: var(--color-success-hover);
+    }
+
+    .button--success:active:not(:disabled) {
+      background: var(--color-success-pressed);
+    }
+
+    .button--link,
+    .button--text {
       min-height: auto;
       padding: 0;
       color: var(--color-brand-primary);
       text-decoration: underline;
       text-underline-offset: 0.2em;
+    }
+
+    .button--text {
+      text-decoration: none;
+    }
+
+    .button--full-width {
+      width: 100%;
     }
 
     .button--small {
@@ -158,4 +183,5 @@ export class ButtonComponent {
   readonly disabled = input(false);
   readonly loading = input(false);
   readonly loadingLabel = input('Loading');
+  readonly fullWidth = input(false);
 }

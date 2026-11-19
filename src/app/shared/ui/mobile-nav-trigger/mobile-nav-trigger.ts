@@ -6,10 +6,12 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
     <button
       class="mobile-nav-trigger"
       type="button"
+      [attr.id]="buttonId() || null"
       [attr.aria-expanded]="expanded()"
       [attr.aria-controls]="controlsId()"
       [attr.aria-label]="expanded() ? 'Close navigation menu' : 'Open navigation menu'"
       (click)="toggled.emit()"
+      (keydown.escape)="closeOnEscape($event)"
     >
       @if (expanded()) {
         <span aria-hidden="true">&times;</span>
@@ -44,6 +46,14 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class MobileNavTriggerComponent {
   readonly controlsId = input.required<string>();
+  readonly buttonId = input('');
   readonly expanded = input(false);
   readonly toggled = output<void>();
+
+  protected closeOnEscape(event: Event): void {
+    if (this.expanded()) {
+      event.preventDefault();
+      this.toggled.emit();
+    }
+  }
 }

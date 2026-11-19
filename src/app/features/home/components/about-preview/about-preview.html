@@ -1,0 +1,19 @@
+<section class="about-preview container" aria-labelledby="about-preview-title">
+  <div class="about-preview__content">
+    <ui-section-heading
+      id="about-preview-title"
+      eyebrow="About"
+      [title]="content().heading ?? 'A little about me'"
+    />
+    <p class="about-preview__summary">{{ content().summary }}</p>
+    <ui-navigation-item label="Read more" link="/about" appearance="secondary" />
+  </div>
+  @if (content().image; as image) {
+    <ui-image
+      class="about-preview__image"
+      [src]="image.src"
+      [alt]="image.alt"
+      [aspectRatio]="image.aspectRatio ?? 'portrait'"
+    />
+  }
+</section>

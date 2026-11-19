@@ -1,5 +1,6 @@
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { HOME_ROUTES } from './features/home/home.routes';
 
 describe('application routes', () => {
   it('keeps the design showcase out of production route configuration', () => {
@@ -30,5 +31,11 @@ describe('application routes', () => {
       'github-stats',
       'leetcode-stats',
     ]);
+  });
+
+  it('loads the home page through its lazy feature route', () => {
+    expect(HOME_ROUTES).toHaveLength(1);
+    expect(HOME_ROUTES[0]?.path).toBe('');
+    expect(HOME_ROUTES[0]?.loadComponent).toBeDefined();
   });
 });

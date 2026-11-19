@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+export type NavigationItemAppearance = 'default' | 'primary' | 'secondary';
+
 @Component({
   selector: 'ui-navigation-item',
   imports: [RouterLink, RouterLinkActive],
   template: `
     <a
-      [class]="'navigation-item navigation-item--' + orientation()"
+      [class]="
+        'navigation-item navigation-item--' + orientation() + ' navigation-item--' + appearance()
+      "
       [routerLink]="link()"
       routerLinkActive="is-active"
       [routerLinkActiveOptions]="{ exact: exact() }"
@@ -53,6 +57,35 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       box-shadow: inset 0 -2px var(--color-brand-primary);
     }
 
+    .navigation-item--primary {
+      min-height: 2.75rem;
+      padding-inline: var(--space-5);
+      color: var(--color-text-on-accent);
+      font-weight: var(--font-weight-semibold);
+      background: var(--color-brand-primary);
+    }
+
+    .navigation-item--primary:hover,
+    .navigation-item--primary.is-active {
+      color: var(--color-text-on-accent);
+      background: var(--color-brand-primary-hover);
+      box-shadow: none;
+    }
+
+    .navigation-item--secondary {
+      min-height: 2.75rem;
+      padding-inline: var(--space-5);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border-strong);
+    }
+
+    .navigation-item--secondary:hover,
+    .navigation-item--secondary.is-active {
+      color: var(--color-text-primary);
+      background: var(--color-interactive-hover);
+      box-shadow: none;
+    }
+
     .navigation-item__icon:empty {
       display: none;
     }
@@ -64,4 +97,5 @@ export class NavigationItemComponent {
   readonly link = input.required<string>();
   readonly exact = input(false);
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
+  readonly appearance = input<NavigationItemAppearance>('default');
 }

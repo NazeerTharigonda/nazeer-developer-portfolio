@@ -1,0 +1,13 @@
+<span
+  class="avatar"
+  [class.avatar--small]="size() === 'small'"
+  [class.avatar--large]="size() === 'large'"
+  role="img"
+  [attr.aria-label]="label()"
+>
+  @if (src() && failedSource() !== src()) {
+    <img [src]="src()" alt="" [attr.loading]="loading()" (error)="onImageError()" />
+  } @else {
+    <span aria-hidden="true">{{ fallbackText() }}</span>
+  }
+</span>

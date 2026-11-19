@@ -125,9 +125,35 @@ When admin authentication is introduced, add appropriate guards at the admin rou
 - `_motion.scss`: reusable transform/opacity keyframes and motion preset classes.
 - Component-level styles are scoped and colocated with the component under its feature or shared component folder.
 
-Use `ThemeService` for persisted light/dark preference with system preference as the default. Keep design tokens semantic rather than scattering literal values across components. See `DESIGN-SYSTEM.md`, `COMPONENT-GUIDELINES.md`, and `THEME-GUIDELINES.md` for the token contract and shared component APIs.
+Use `ThemeService` for persisted light/dark preference with system preference as the default. Keep design tokens semantic rather than scattering literal values across components. See `DESIGN-SYSTEM.md`, `COMPONENT-GUIDELINES.md`, and `THEME-GUIDELINES.md` for the token contract and shared component APIs. Shared UI folder boundaries, component inventory, usage patterns, and accessibility requirements are detailed in `SHARED-UI-ARCHITECTURE.md`, `COMPONENT-INVENTORY.md`, `COMPONENT-USAGE.md`, and `ACCESSIBILITY-GUIDELINES.md`.
 
 The public and admin route groups render through separate shared layout shells. Development-only showcase routes (`/_design-system` and `/_design-system/admin`) preview the system inside each shell. They are not part of production routes and contain no portfolio feature content.
+
+## Home page structure
+
+The root public route lazy-loads `features/home/home.routes.ts`, which in turn
+lazy-loads `HomePageComponent`. The page composes feature-owned
+`AboutPreviewComponent` and `ContactCtaComponent` sections with shared
+`ui-card`, `ui-badge`, `ui-image`, `ui-navigation-item`, and
+`ui-section-heading` primitives. The shared navigation item can render default,
+primary, or secondary router links so calls to action retain anchor semantics.
+
+Home page data contracts live in
+`src/app/features/home/models/home-content.ts`. The optional
+`HOME_PAGE_CONTENT` injection token defaults to a `null` signal; the page shows only
+generic portfolio framing when no profile data is configured and omits
+data-dependent sections until real content is supplied. Skill categories,
+experience, projects, certifications, and GitHub/LeetCode metrics use typed
+contracts and have no mock records, API calls, or local persistence. A future
+feature-owned service can adapt API responses to these contracts and expose a
+signal through the Home route provider.
+
+The public shell owns shared navigation and the site footer. Router link-active
+state is used for desktop/mobile/footer links; the mobile menu closes after
+navigation and on Escape, returning focus to its trigger. Social links render
+only when actual URLs are configured. The footer back-to-top action respects
+reduced-motion preferences. Home-page entrance effects use the existing global
+motion utilities and reduced-motion rules.
 
 ## Coding and quality conventions
 

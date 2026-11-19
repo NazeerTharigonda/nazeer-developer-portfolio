@@ -1,0 +1,259 @@
+@let pageContent = content();
+@let hero = pageContent?.hero;
+
+<section class="home-hero" aria-labelledby="home-title">
+  <div class="home-hero__inner container">
+    <div class="home-hero__content motion-fade-up">
+      <p class="home-hero__eyebrow">Developer portfolio</p>
+      <h1 id="home-title">{{ hero?.heading ?? 'Developer portfolio' }}</h1>
+      @if (hero?.role) {
+        <p class="home-hero__role">{{ hero?.role }}</p>
+      }
+      @if (hero?.introduction) {
+        <p class="home-hero__introduction">{{ hero?.introduction }}</p>
+      } @else {
+        <p class="home-hero__introduction">
+          An overview of selected work, experience, and technical interests.
+        </p>
+      }
+      @if (hero?.description) {
+        <p class="home-hero__description">{{ hero?.description }}</p>
+      }
+      <div class="home-hero__actions">
+        <ui-navigation-item
+          [label]="hero?.primaryAction?.label ?? 'Explore projects'"
+          [link]="hero?.primaryAction?.route ?? '/projects'"
+          appearance="primary"
+        />
+        <ui-navigation-item
+          [label]="hero?.secondaryAction?.label ?? 'Get in touch'"
+          [link]="hero?.secondaryAction?.route ?? '/contact'"
+          appearance="secondary"
+        />
+      </div>
+    </div>
+    <div class="home-hero__visual motion-fade-up">
+      @if (hero?.profileImage; as image) {
+        <ui-image
+          class="home-hero__image"
+          [src]="image.src"
+          [alt]="image.alt"
+          [aspectRatio]="image.aspectRatio ?? 'square'"
+          loading="eager"
+        />
+      } @else {
+        <div class="home-hero__decoration" aria-hidden="true">
+          <span class="home-hero__orbit"></span>
+          <span class="home-hero__orbit"></span>
+          <span class="home-hero__accent"></span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+@if (pageContent?.about; as about) {
+  <app-about-preview class="motion-fade-up" [content]="about" />
+}
+
+@if (skillCategories().length > 0) {
+  <section class="home-section container motion-fade-up" aria-labelledby="home-skills-title">
+    <div class="home-section__heading">
+      <ui-section-heading id="home-skills-title" eyebrow="Capabilities" title="Skills" />
+      <ui-navigation-item label="View all skills" link="/skills" />
+    </div>
+    <div class="home-card-grid">
+      @for (category of skillCategories(); track category.id) {
+        <ui-card>
+          <h3 class="home-card__title">{{ category.name }}</h3>
+          <div class="home-badges">
+            @for (skill of category.skills; track skill) {
+              <ui-badge variant="secondary">{{ skill }}</ui-badge>
+            }
+          </div>
+        </ui-card>
+      }
+    </div>
+  </section>
+}
+
+@if (experience().length > 0) {
+  <section class="home-section home-section--alternate" aria-labelledby="home-experience-title">
+    <div class="container">
+      <div class="home-section__heading">
+        <ui-section-heading id="home-experience-title" eyebrow="Journey" title="Experience" />
+        <ui-navigation-item label="View all experience" link="/experience" />
+      </div>
+      <ol class="home-timeline">
+        @for (item of experience(); track item.id) {
+          <li>
+            <ui-card>
+              <article class="home-experience">
+                <div>
+                  <h3 class="home-card__title">{{ item.role }}</h3>
+                  <p class="home-experience__organization">{{ item.organization }}</p>
+                  <p class="home-experience__dates">
+                    <time [attr.datetime]="item.startDate">{{ item.startDate }}</time>
+                    @if (item.endDate) {
+                      <span aria-hidden="true"> — </span>
+                      <time [attr.datetime]="item.endDate">{{ item.endDate }}</time>
+                    }
+                  </p>
+                </div>
+                @if (item.summary) {
+                  <p>{{ item.summary }}</p>
+                }
+              </article>
+            </ui-card>
+          </li>
+        }
+      </ol>
+    </div>
+  </section>
+}
+
+@if (featuredProjects().length > 0) {
+  <section class="home-section container motion-fade-up" aria-labelledby="home-projects-title">
+    <div class="home-section__heading">
+      <ui-section-heading
+        id="home-projects-title"
+        eyebrow="Selected work"
+        title="Featured projects"
+      />
+      <ui-navigation-item label="View all projects" link="/projects" />
+    </div>
+    <div class="home-card-grid home-card-grid--projects">
+      @for (project of featuredProjects(); track project.id) {
+        <ui-card>
+          <article class="home-project">
+            @if (project.image; as image) {
+              <ui-image
+                class="home-project__image"
+                [src]="image.src"
+                [alt]="image.alt"
+                [aspectRatio]="image.aspectRatio ?? 'landscape'"
+              />
+            }
+            <div class="home-project__body">
+              <h3 class="home-card__title">{{ project.title }}</h3>
+              <p>{{ project.description }}</p>
+              @if (project.technologies.length > 0) {
+                <div class="home-badges" aria-label="Technologies used">
+                  @for (technology of project.technologies; track technology) {
+                    <ui-badge variant="outline">{{ technology }}</ui-badge>
+                  }
+                </div>
+              }
+              <div class="home-project__links">
+                @if (project.detailsRoute) {
+                  <ui-navigation-item
+                    [label]="'View ' + project.title"
+                    [link]="project.detailsRoute"
+                    appearance="secondary"
+                  />
+                }
+                @if (project.externalUrl) {
+                  <a
+                    class="home-external-link"
+                    [href]="project.externalUrl"
+                    [attr.aria-label]="'Open ' + project.title + ' in a new tab'"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    External project link
+                  </a>
+                }
+              </div>
+            </div>
+          </article>
+        </ui-card>
+      }
+    </div>
+  </section>
+}
+
+@if (certifications().length > 0) {
+  <section class="home-section home-section--alternate" aria-labelledby="home-certifications-title">
+    <div class="container">
+      <div class="home-section__heading">
+        <ui-section-heading
+          id="home-certifications-title"
+          eyebrow="Credentials"
+          title="Certifications"
+        />
+        <ui-navigation-item label="View all certifications" link="/certifications" />
+      </div>
+      <div class="home-card-grid">
+        @for (certification of certifications(); track certification.id) {
+          <ui-card>
+            <article class="home-certification">
+              <h3 class="home-card__title">{{ certification.title }}</h3>
+              <p>{{ certification.issuer }}</p>
+              <time [attr.datetime]="certification.issuedAt">{{ certification.issuedAt }}</time>
+              @if (certification.credentialUrl) {
+                <a
+                  class="home-external-link"
+                  [href]="certification.credentialUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View credential
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              }
+            </article>
+          </ui-card>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+@if (githubStatistics()?.metrics?.length) {
+  <section class="home-section container motion-fade-up" aria-labelledby="home-github-title">
+    <div class="home-section__heading">
+      <ui-section-heading id="home-github-title" eyebrow="Open source" title="GitHub statistics" />
+      <ui-navigation-item label="View GitHub statistics" link="/github-stats" />
+    </div>
+    <div class="home-card-grid home-card-grid--stats">
+      @for (metric of githubStatistics()!.metrics; track metric.id) {
+        <ui-card variant="stat">
+          <article class="home-stat">
+            <p class="home-stat__label">{{ metric.label }}</p>
+            <p class="home-stat__value">{{ metric.value }}</p>
+          </article>
+        </ui-card>
+      }
+    </div>
+  </section>
+}
+
+@if (leetcodeStatistics()?.metrics?.length) {
+  <section
+    class="home-section home-section--alternate motion-fade-up"
+    aria-labelledby="home-leetcode-title"
+  >
+    <div class="container">
+      <div class="home-section__heading">
+        <ui-section-heading
+          id="home-leetcode-title"
+          eyebrow="Problem solving"
+          title="LeetCode statistics"
+        />
+        <ui-navigation-item label="View LeetCode statistics" link="/leetcode-stats" />
+      </div>
+      <div class="home-card-grid home-card-grid--stats">
+        @for (metric of leetcodeStatistics()!.metrics; track metric.id) {
+          <ui-card variant="stat">
+            <article class="home-stat">
+              <p class="home-stat__label">{{ metric.label }}</p>
+              <p class="home-stat__value">{{ metric.value }}</p>
+            </article>
+          </ui-card>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<app-contact-cta class="motion-fade-up" />

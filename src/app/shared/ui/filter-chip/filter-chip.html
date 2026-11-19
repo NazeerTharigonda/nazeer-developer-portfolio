@@ -1,0 +1,10 @@
+<button
+  class="filter-chip"
+  type="button"
+  [disabled]="disabled()"
+  [attr.aria-pressed]="selected()"
+  [class.filter-chip--selected]="selected()"
+  (click)="toggle()"
+>
+  <ng-content>{{ label() }}</ng-content>
+</button>

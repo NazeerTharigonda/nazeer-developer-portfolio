@@ -1,0 +1,17 @@
+<div class="segmented-control" role="radiogroup" [attr.aria-label]="label()">
+  @for (option of options(); track option.id) {
+    <button
+      class="segmented-control__option"
+      type="button"
+      role="radio"
+      [disabled]="option.disabled ?? false"
+      [attr.aria-checked]="selectedId() === option.id"
+      [attr.tabindex]="isTabStop(option) ? 0 : -1"
+      [class.segmented-control__option--selected]="selectedId() === option.id"
+      (click)="select(option.id)"
+      (keydown)="onKeydown($event, option.id)"
+    >
+      {{ option.label }}
+    </button>
+  }
+</div>

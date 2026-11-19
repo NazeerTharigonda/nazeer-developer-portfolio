@@ -25,4 +25,16 @@ describe('ButtonComponent', () => {
     expect(button.getAttribute('aria-busy')).toBe('true');
     expect(fixture.nativeElement.textContent).toContain('Loading');
   });
+
+  it('supports success styling and full-width layout', async () => {
+    await TestBed.configureTestingModule({ imports: [ButtonComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(ButtonComponent);
+    fixture.componentRef.setInput('variant', 'success');
+    fixture.componentRef.setInput('fullWidth', true);
+    fixture.detectChanges();
+
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(button.classList).toContain('button--success');
+    expect(button.classList).toContain('button--full-width');
+  });
 });

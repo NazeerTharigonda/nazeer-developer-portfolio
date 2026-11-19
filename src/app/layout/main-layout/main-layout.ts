@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
+import { ButtonComponent } from '../../shared/ui/button/button';
 import { MobileNavTriggerComponent } from '../../shared/ui/mobile-nav-trigger/mobile-nav-trigger';
 import { NavigationItemComponent } from '../../shared/ui/navigation-item/navigation-item';
 import { ThemeToggleComponent } from '../../shared/ui/theme-toggle/theme-toggle';
@@ -20,11 +21,19 @@ const PUBLIC_NAVIGATION: readonly { label: string; link: string; exact?: boolean
   { label: 'LeetCode stats', link: '/leetcode-stats' },
 ];
 
+interface PublicSocialLink {
+  readonly label: string;
+  readonly href: string;
+}
+
+const PUBLIC_SOCIAL_LINKS: readonly PublicSocialLink[] = [];
+
 @Component({
   selector: 'app-main-layout',
   imports: [
     RouterLink,
     RouterOutlet,
+    ButtonComponent,
     NavigationItemComponent,
     ThemeToggleComponent,
     MobileNavTriggerComponent,
@@ -51,6 +60,7 @@ const PUBLIC_NAVIGATION: readonly { label: string; link: string; exact?: boolean
           <ui-theme-toggle />
           <ui-mobile-nav-trigger
             class="mobile-navigation-trigger"
+            buttonId="public-mobile-navigation-trigger"
             controlsId="public-mobile-navigation"
             [expanded]="mobileNavigationOpen()"
             (toggled)="toggleMobileNavigation()"
@@ -62,6 +72,8 @@ const PUBLIC_NAVIGATION: readonly { label: string; link: string; exact?: boolean
           id="public-mobile-navigation"
           class="mobile-navigation"
           aria-label="Mobile navigation"
+          tabindex="-1"
+          (keydown.escape)="closeMobileNavigation(true)"
         >
           @for (item of navigation; track item.link) {
             <ui-navigation-item
@@ -79,7 +91,27 @@ const PUBLIC_NAVIGATION: readonly { label: string; link: string; exact?: boolean
     <footer class="public-footer">
       <div class="public-footer__inner">
         <a class="brand brand--footer" routerLink="/">Nazeer</a>
-        <p>Designed with care.</p>
+        <nav class="footer-navigation" aria-label="Footer navigation">
+          @for (item of navigation; track item.link) {
+            <ui-navigation-item
+              [label]="item.label"
+              [link]="item.link"
+              [exact]="item.exact ?? false"
+              orientation="horizontal"
+            />
+          }
+        </nav>
+        @if (socialLinks.length > 0) {
+          <nav class="footer-social-links" aria-label="Social links">
+            @for (item of socialLinks; track item.href) {
+              <a [href]="item.href" target="_blank" rel="noopener noreferrer">{{ item.label }}</a>
+            }
+          </nav>
+        }
+        <div class="footer-meta">
+          <p>© {{ currentYear }}. All rights reserved.</p>
+          <ui-button variant="ghost" (click)="scrollToTop()">Back to top</ui-button>
+        </div>
       </div>
     </footer>
   `,
@@ -180,13 +212,41 @@ const PUBLIC_NAVIGATION: readonly { label: string; link: string; exact?: boolean
     }
 
     .public-footer__inner {
-      display: flex;
+      display: grid;
       width: min(100% - var(--page-gutter) * 2, var(--container-wide));
-      min-height: 5rem;
+      grid-template-columns: auto minmax(0, 1fr);
       align-items: center;
-      justify-content: space-between;
       gap: var(--space-4);
       margin-inline: auto;
+      padding-block: var(--space-6);
+    }
+
+    .footer-navigation,
+    .footer-social-links,
+    .footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .footer-navigation {
+      justify-content: end;
+    }
+
+    .footer-social-links a {
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      padding-inline: var(--space-3);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-body-small);
+      overflow-wrap: anywhere;
+    }
+
+    .footer-meta {
+      grid-column: 1 / -1;
+      justify-content: space-between;
     }
 
     .public-footer p {
@@ -219,7 +279,15 @@ const PUBLIC_NAVIGATION: readonly { label: string; link: string; exact?: boolean
       }
 
       .public-footer__inner {
-        justify-content: center;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .footer-navigation {
+        justify-content: start;
+      }
+
+      .footer-meta {
+        grid-column: auto;
       }
     }
 
@@ -241,6 +309,8 @@ export class MainLayoutComponent {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly navigation = PUBLIC_NAVIGATION;
+  protected readonly socialLinks = PUBLIC_SOCIAL_LINKS;
+  protected readonly currentYear = new Date().getFullYear();
   protected readonly mobileNavigationOpen = signal(false);
 
   constructor() {
@@ -249,10 +319,27 @@ export class MainLayoutComponent {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => this.mobileNavigationOpen.set(false));
+      .subscribe(() => this.closeMobileNavigation(true));
   }
 
   protected toggleMobileNavigation(): void {
     this.mobileNavigationOpen.update((open) => !open);
+  }
+
+  protected closeMobileNavigation(restoreFocus = false): void {
+    const wasOpen = this.mobileNavigationOpen();
+    this.mobileNavigationOpen.set(false);
+
+    if (restoreFocus && wasOpen) {
+      document.getElementById('public-mobile-navigation-trigger')?.focus();
+    }
+  }
+
+  protected scrollToTop(): void {
+    const prefersReducedMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   }
 }

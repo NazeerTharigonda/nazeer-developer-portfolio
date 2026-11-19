@@ -95,7 +95,11 @@ export class TabsComponent {
       }
 
       const nextTab = tabs[targetIndex];
-      if (nextTab && !nextTab.disabled) {
+      if (
+        nextTab &&
+        !nextTab.disabled &&
+        (event.key === 'Home' || event.key === 'End' || targetIndex !== currentIndex)
+      ) {
         this.activeIdChange.emit(nextTab.id);
         document.getElementById(`${nextTab.id}-tab`)?.focus();
         return;

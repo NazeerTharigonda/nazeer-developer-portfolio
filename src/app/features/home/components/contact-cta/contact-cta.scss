@@ -1,0 +1,47 @@
+.contact-cta {
+  padding-block: clamp(var(--space-10), 8vw, var(--space-16));
+  background:
+    radial-gradient(
+      circle at 90% 50%,
+      color-mix(in srgb, var(--color-brand-primary) 12%, transparent),
+      transparent 30rem
+    ),
+    var(--color-background-secondary);
+  border-block: 1px solid var(--color-border);
+}
+
+.contact-cta__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.contact-cta__inner > div {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.contact-cta__eyebrow {
+  color: var(--color-brand-primary);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.contact-cta h2 {
+  font-size: var(--font-size-h2);
+}
+
+.contact-cta__inner > div > p:last-child {
+  max-width: 55ch;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 767px) {
+  .contact-cta__inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

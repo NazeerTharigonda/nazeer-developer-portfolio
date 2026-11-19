@@ -1,6 +1,15 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'error' | 'information';
+export type BadgeVariant =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'danger'
+  | 'information'
+  | 'outline';
 
 @Component({
   selector: 'ui-badge',
@@ -37,6 +46,17 @@ export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'erro
       border-color: var(--color-border);
     }
 
+    .badge--secondary {
+      color: var(--color-text-secondary);
+      background: var(--color-background-secondary);
+    }
+
+    .badge--outline {
+      color: var(--color-text-secondary);
+      background: transparent;
+      border-color: var(--color-border-strong);
+    }
+
     .badge--primary {
       color: var(--color-brand-primary);
       background: color-mix(in srgb, var(--color-brand-primary) 12%, transparent);
@@ -52,7 +72,8 @@ export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'erro
       background: var(--color-warning-surface);
     }
 
-    .badge--error {
+    .badge--error,
+    .badge--danger {
       color: var(--color-error);
       background: var(--color-error-surface);
     }

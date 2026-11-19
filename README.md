@@ -62,7 +62,7 @@ src/
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for folder responsibilities, routing and configuration decisions, conventions, and guidance for adding features.
 
-Design decisions and component APIs are documented in [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md), [COMPONENT-GUIDELINES.md](./COMPONENT-GUIDELINES.md), and [THEME-GUIDELINES.md](./THEME-GUIDELINES.md). Run the development server and open `/_design-system` to inspect the design system within the public shell or `/_design-system/admin` to preview it within the admin shell; both routes are excluded from production builds.
+Design decisions and component APIs are documented in [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md), [COMPONENT-GUIDELINES.md](./COMPONENT-GUIDELINES.md), and [THEME-GUIDELINES.md](./THEME-GUIDELINES.md). The shared library is described in [SHARED-UI-ARCHITECTURE.md](./SHARED-UI-ARCHITECTURE.md), [COMPONENT-INVENTORY.md](./COMPONENT-INVENTORY.md), [COMPONENT-USAGE.md](./COMPONENT-USAGE.md), and [ACCESSIBILITY-GUIDELINES.md](./ACCESSIBILITY-GUIDELINES.md). Run the development server and open `/_design-system` to inspect the design system within the public shell or `/_design-system/admin` to preview it within the admin shell; both routes are excluded from production builds.
 
 ## Development setup
 

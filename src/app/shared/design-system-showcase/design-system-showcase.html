@@ -1,0 +1,392 @@
+<main class="showcase container">
+  <header class="showcase__header">
+    <div>
+      <p class="showcase__eyebrow">Development preview</p>
+      <h1 class="type-h1">Obsidian Luxe</h1>
+      <p>Centralized visual language and reusable interface foundations.</p>
+    </div>
+    <ui-theme-toggle />
+  </header>
+
+  <ui-tabs
+    [tabs]="tabs"
+    [activeId]="activeTab()"
+    label="Design system sections"
+    (activeIdChange)="activeTab.set($event)"
+  />
+
+  <div
+    id="tokens-panel"
+    class="showcase-panel"
+    role="tabpanel"
+    tabindex="0"
+    aria-labelledby="tokens-tab"
+    [hidden]="activeTab() !== 'tokens'"
+  >
+    <section class="showcase-section" aria-labelledby="color-heading">
+      <ui-section-heading id="color-heading" eyebrow="Foundation" title="Color system" />
+      <div class="swatch-grid">
+        @for (token of colorTokens; track token.name) {
+          <div class="swatch">
+            <span
+              class="swatch__sample"
+              [style.background]="'var(' + token.variable + ')'"
+              aria-hidden="true"
+            ></span>
+            <span>{{ token.name }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="showcase-section" aria-labelledby="type-heading">
+      <ui-section-heading id="type-heading" eyebrow="Type scale" title="Editorial typography" />
+      <div class="type-list">
+        <p class="type-display">Display — considered by design.</p>
+        <p class="type-h1">Heading one</p>
+        <p class="type-h2">Heading two</p>
+        <p class="type-h3">Heading three</p>
+        <p class="type-h4">Heading four</p>
+        <p class="type-h5">Heading five</p>
+        <p class="type-body-large">Large body text for introductions and emphasis.</p>
+        <p>Regular body text balances readability and restraint.</p>
+        <p class="type-body-small">Small body text for supporting details.</p>
+        <p class="type-caption">Caption and supporting labels</p>
+      </div>
+    </section>
+
+    <section class="showcase-section" aria-labelledby="spacing-heading">
+      <ui-section-heading id="spacing-heading" eyebrow="Rhythm" title="Spacing and motion" />
+      <div class="spacing-list">
+        @for (space of spacingTokens; track space) {
+          <div class="spacing-item">
+            <code>--space-{{ space }}</code>
+            <span [style.width]="'var(--space-' + space + ')'" aria-hidden="true"></span>
+          </div>
+        }
+      </div>
+      <div class="motion-examples">
+        <span class="motion-fade-in">Fade</span>
+        <span class="motion-fade-up">Fade up</span>
+        <span class="motion-fade-down">Fade down</span>
+        <span class="motion-scale-in">Scale in</span>
+        <span class="motion-slide-in">Slide in</span>
+        <span class="motion-slide-out">Slide out</span>
+        <span class="motion-hover-elevation">Hover elevation</span>
+      </div>
+    </section>
+
+    <section class="showcase-section" aria-labelledby="shape-heading">
+      <ui-section-heading id="shape-heading" eyebrow="Finishing" title="Radius and elevation" />
+      <div class="token-examples">
+        @for (token of radiusTokens; track token) {
+          <div class="token-example">
+            <span [style.border-radius]="'var(--radius-' + token + ')'" aria-hidden="true"></span>
+            <code>--radius-{{ token }}</code>
+          </div>
+        }
+      </div>
+      <div class="token-examples">
+        @for (token of shadowTokens; track token) {
+          <div class="token-example">
+            <span [style.box-shadow]="'var(--shadow-' + token + ')'" aria-hidden="true"></span>
+            <code>--shadow-{{ token }}</code>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+
+  <div
+    id="components-panel"
+    class="showcase-panel"
+    role="tabpanel"
+    tabindex="0"
+    aria-labelledby="components-tab"
+    [hidden]="activeTab() !== 'components'"
+  >
+    <section class="showcase-section" aria-labelledby="buttons-heading">
+      <ui-section-heading id="buttons-heading" eyebrow="Actions" title="Buttons and icon buttons" />
+      <div class="component-row">
+        <ui-button>Primary</ui-button>
+        <ui-button variant="secondary">Secondary</ui-button>
+        <ui-button variant="outline">Outline</ui-button>
+        <ui-button variant="ghost">Ghost</ui-button>
+        <ui-button variant="text">Text</ui-button>
+        <ui-button variant="danger">Danger</ui-button>
+        <ui-button variant="success">Success</ui-button>
+        <ui-button variant="link">Link style</ui-button>
+        <ui-button size="small">Small</ui-button>
+        <ui-button size="large">Large</ui-button>
+        <ui-button [loading]="true">Saving</ui-button>
+        <ui-button [disabled]="true">Disabled</ui-button>
+        <ui-button [fullWidth]="true">Full width</ui-button>
+        <ui-icon-button label="Search">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none">
+            <circle cx="10.8" cy="10.8" r="6.8" />
+            <path d="m16 16 5 5" />
+          </svg>
+        </ui-icon-button>
+      </div>
+    </section>
+
+    <section class="showcase-section" aria-labelledby="surface-heading">
+      <ui-section-heading id="surface-heading" eyebrow="Surfaces" title="Cards and badges" />
+      <div class="card-grid">
+        <ui-card
+          ><h3>Default card</h3>
+          <p>Neutral content surface.</p></ui-card
+        >
+        <ui-card variant="elevated"
+          ><h3>Elevated card</h3>
+          <p>Subtle elevation for hierarchy.</p></ui-card
+        >
+        <ui-card variant="bordered"
+          ><h3>Bordered card</h3>
+          <p>Clear separation through structure.</p></ui-card
+        >
+        <ui-card variant="feature"
+          ><h3>Feature card</h3>
+          <p>Expanded padding for a focal content block.</p></ui-card
+        >
+        <ui-card variant="stat"
+          ><h3>Statistics card</h3>
+          <p>Compact surface for a future metric.</p></ui-card
+        >
+        <ui-card variant="interactive" (activated)="notify('Interactive card selected')">
+          <h3>Interactive card</h3>
+          <p>Keyboard and pointer activation enabled.</p>
+        </ui-card>
+      </div>
+      <div class="component-row">
+        <ui-badge>Default</ui-badge>
+        <ui-badge variant="primary">Primary</ui-badge>
+        <ui-badge variant="secondary">Secondary</ui-badge>
+        <ui-badge variant="success">Success</ui-badge>
+        <ui-badge variant="warning">Warning</ui-badge>
+        <ui-badge variant="error">Error</ui-badge>
+        <ui-badge variant="outline">Outline</ui-badge>
+        <ui-badge variant="information">Information</ui-badge>
+        <ui-badge size="small">Small</ui-badge>
+      </div>
+      <div class="component-row">
+        <ui-avatar label="Nazeer Tharigonda" initials="NT" />
+        <ui-avatar label="Ada Lovelace" initials="AL" size="small" />
+        <ui-avatar label="Grace Hopper" initials="GH" size="large" />
+      </div>
+    </section>
+
+    <section class="showcase-section" aria-labelledby="selection-heading">
+      <ui-section-heading
+        id="selection-heading"
+        eyebrow="Selection"
+        title="Filtering and layout primitives"
+      />
+      <div class="component-row">
+        <ui-segmented-control
+          label="Sample view"
+          [options]="segments"
+          [selectedId]="activeSegment()"
+          (selectedIdChange)="activeSegment.set($event)"
+        />
+        <ui-filter-chip
+          label="Selected filter"
+          [selected]="filterChipSelected()"
+          (selectedChange)="filterChipSelected.set($event)"
+        />
+      </div>
+      <ui-divider />
+    </section>
+
+    <section class="showcase-section" aria-labelledby="table-heading">
+      <ui-section-heading
+        id="table-heading"
+        eyebrow="Data display"
+        title="Sortable, selectable table"
+        description="Local sample data demonstrates the table API; data retrieval and management stay with the consuming feature."
+      />
+      <ui-data-table
+        caption="Example records"
+        [columns]="tableColumns"
+        [rows]="tableRows"
+        [rowKey]="tableRowKey"
+        [actions]="tableActions"
+        [selectionEnabled]="true"
+        [selectedKeys]="selectedTableKeys()"
+        (selectedKeysChange)="selectedTableKeys.set($event)"
+        (actionSelected)="notify('Table action: ' + $event.actionId)"
+      />
+    </section>
+
+    <section class="showcase-section" aria-labelledby="form-heading">
+      <ui-section-heading
+        id="form-heading"
+        eyebrow="Form primitives"
+        title="Controls and field states"
+      />
+      <div class="form-grid">
+        <ui-form-field controlId="sample-text" label="Text input" hint="A short supporting hint.">
+          <input
+            id="sample-text"
+            uiInput
+            placeholder="Enter text"
+            aria-describedby="sample-text-message"
+          />
+        </ui-form-field>
+        <ui-form-field controlId="sample-email" label="Email">
+          <input id="sample-email" uiInput type="email" placeholder="name@example.com" />
+        </ui-form-field>
+        <ui-form-field controlId="sample-password" label="Password">
+          <input id="sample-password" uiInput type="password" value="demonstration" />
+        </ui-form-field>
+        <ui-form-field controlId="sample-select" label="Select">
+          <select id="sample-select" uiInput>
+            <option>Choose an option</option>
+            <option>Option one</option>
+            <option>Option two</option>
+          </select>
+        </ui-form-field>
+        <ui-form-field controlId="sample-textarea" label="Textarea">
+          <textarea id="sample-textarea" uiInput placeholder="Write a note"></textarea>
+        </ui-form-field>
+        <ui-form-field
+          controlId="sample-invalid"
+          label="Invalid state"
+          error="Please review this value."
+        >
+          <input
+            id="sample-invalid"
+            uiInput
+            aria-invalid="true"
+            aria-describedby="sample-invalid-message"
+            value="Invalid value"
+          />
+        </ui-form-field>
+        <ui-form-field
+          controlId="sample-valid"
+          label="Valid state"
+          success="This value is available."
+        >
+          <input
+            id="sample-valid"
+            uiInput
+            aria-invalid="false"
+            aria-describedby="sample-valid-message"
+            value="Valid value"
+          />
+        </ui-form-field>
+        <label class="choice"><input uiCheckbox type="checkbox" checked /> Checkbox</label>
+        <label class="choice"
+          ><input uiRadio type="radio" name="showcase-radio" checked /> Radio</label
+        >
+        <div class="choice">
+          <ui-toggle label="Enable preview option" />
+          <span>Toggle</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase-section" aria-labelledby="feedback-heading">
+      <ui-section-heading id="feedback-heading" eyebrow="Feedback" title="Status and loading" />
+      <div class="feedback-grid">
+        <ui-alert title="Information" variant="information"
+          >A neutral informational message.</ui-alert
+        >
+        <ui-alert title="Success" variant="success">The action completed successfully.</ui-alert>
+        <ui-alert title="Warning" variant="warning"
+          >Review this message before proceeding.</ui-alert
+        >
+        <ui-alert title="Error" variant="error" [dismissible]="true"
+          >An accessible error notification.</ui-alert
+        >
+      </div>
+      <div class="component-row">
+        <ui-spinner label="Loading preview" />
+        <ui-spinner size="large" label="Loading content" />
+        <ui-progress [value]="64" label="Example progress" />
+        <ui-skeleton width="12rem" height="1rem" />
+        <ui-skeleton width="3rem" height="3rem" shape="circle" />
+        <ui-button (click)="showToast()">Show toast</ui-button>
+        <ui-button variant="outline" (click)="dialogOpen.set(true)">Open modal</ui-button>
+        <ui-button variant="ghost" [uiTooltip]="'Native title and accessible description'"
+          >Tooltip example</ui-button
+        >
+      </div>
+      <ui-empty-state
+        title="Empty state"
+        description="A reusable neutral empty state for future feature screens."
+      >
+        <span uiEmptyIcon class="empty-mark">—</span>
+        <ui-button uiEmptyAction variant="outline">Optional action</ui-button>
+      </ui-empty-state>
+    </section>
+
+    <ui-dialog
+      id="showcase-dialog"
+      title="Dialog foundation"
+      [open]="dialogOpen()"
+      (openChange)="dialogOpen.set($event)"
+    >
+      <p>This native modal dialog provides browser-managed focus and Escape dismissal.</p>
+      <div uiDialogActions class="component-row">
+        <ui-button variant="ghost" (click)="dialogOpen.set(false)">Cancel</ui-button>
+        <ui-button (click)="dialogOpen.set(false)">Confirm</ui-button>
+      </div>
+    </ui-dialog>
+  </div>
+
+  <div
+    id="navigation-panel"
+    class="showcase-panel"
+    role="tabpanel"
+    tabindex="0"
+    aria-labelledby="navigation-tab"
+    [hidden]="activeTab() !== 'navigation'"
+  >
+    <section class="showcase-section" aria-labelledby="navigation-heading">
+      <ui-section-heading
+        id="navigation-heading"
+        eyebrow="Navigation"
+        title="Reusable navigation primitives"
+      />
+      <div class="navigation-grid">
+        <ui-navigation-item label="Home" link="/" [exact]="true" />
+        <ui-navigation-item label="Projects" link="/projects" />
+        <ui-breadcrumb
+          [items]="[
+            { label: 'Workspace', link: '/' },
+            { label: 'Design system', link: '/_design-system' },
+            { label: 'Components' },
+          ]"
+        />
+        <ui-dropdown label="Example menu">
+          <span uiDropdownTrigger class="dropdown-trigger">Actions</span>
+          <ui-menu-item uiMenuItem (selected)="notify('Menu action selected')"
+            >View details</ui-menu-item
+          >
+          <ui-menu-item
+            uiMenuItem
+            [danger]="true"
+            (selected)="notify('Destructive action selected')"
+            >Remove item</ui-menu-item
+          >
+        </ui-dropdown>
+        <ui-mobile-nav-trigger
+          controlsId="showcase-mobile-nav"
+          [expanded]="mobileNavOpen()"
+          (toggled)="toggleMobileNav()"
+        />
+        <ui-pagination
+          [currentPage]="currentPage()"
+          [totalPages]="12"
+          (pageChange)="currentPage.set($event)"
+        />
+      </div>
+      @if (mobileNavOpen()) {
+        <nav id="showcase-mobile-nav" aria-label="Example mobile navigation">
+          Navigation trigger expanded
+        </nav>
+      }
+    </section>
+  </div>
+</main>

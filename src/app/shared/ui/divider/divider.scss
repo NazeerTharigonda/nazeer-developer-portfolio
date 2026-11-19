@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.divider--vertical {
+  width: 1px;
+  height: auto;
+  min-height: 1em;
+  align-self: stretch;
+}
