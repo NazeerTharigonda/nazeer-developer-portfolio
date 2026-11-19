@@ -1,0 +1,119 @@
+@keyframes motion-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes motion-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-3));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-3) * -1));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes motion-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--space-4));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes motion-slide-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(var(--space-4));
+  }
+}
+
+.motion-fade-in {
+  animation: motion-fade-in var(--duration-moderate) var(--ease-enter) both;
+}
+
+.motion-fade-up {
+  animation: motion-fade-up var(--duration-moderate) var(--ease-enter) both;
+}
+
+.motion-fade-down {
+  animation: motion-fade-down var(--duration-moderate) var(--ease-enter) both;
+}
+
+.motion-scale-in {
+  animation: motion-scale-in var(--duration-fast) var(--ease-emphasized) both;
+}
+
+.motion-slide-in {
+  animation: motion-slide-in var(--duration-moderate) var(--ease-enter) both;
+}
+
+.motion-slide-out {
+  animation: motion-slide-out var(--duration-fast) var(--ease-exit) both;
+}
+
+.motion-hover-elevation {
+  transition:
+    transform var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard);
+}
+
+.motion-hover-elevation:hover {
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-fade-in,
+  .motion-fade-up,
+  .motion-fade-down,
+  .motion-scale-in,
+  .motion-slide-in,
+  .motion-slide-out {
+    animation: none;
+  }
+
+  .motion-hover-elevation:hover {
+    transform: none;
+  }
+}

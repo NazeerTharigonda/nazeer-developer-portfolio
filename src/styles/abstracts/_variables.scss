@@ -1,2 +1,26 @@
-$font-family-sans: system-ui, sans-serif;
-$line-height-base: 1.5;
+$font-family-heading: 'Manrope', 'Inter', 'Segoe UI', sans-serif;
+$font-family-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+$font-family-mono: 'Cascadia Code', 'SFMono-Regular', Consolas, monospace;
+
+$breakpoint-mobile: 320px;
+$breakpoint-mobile-large: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-large-desktop: 1280px;
+$breakpoint-wide-desktop: 1440px;
+
+$container-sm: 40rem;
+$container-md: 52rem;
+$container-lg: 72rem;
+$container-wide: 84rem;
+
+$motion-instant: 100ms;
+$motion-fast: 150ms;
+$motion-normal: 200ms;
+$motion-moderate: 300ms;
+$motion-slow: 500ms;
+
+$ease-standard: cubic-bezier(0.2, 0, 0, 1);
+$ease-enter: cubic-bezier(0, 0, 0.2, 1);
+$ease-exit: cubic-bezier(0.4, 0, 1, 1);
+$ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);

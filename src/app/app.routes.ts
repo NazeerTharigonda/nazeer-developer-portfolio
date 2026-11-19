@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
+import { environment } from '../environments/environment';
+import { MainLayoutComponent } from './layout/main-layout/main-layout';
 
-export const routes: Routes = [
+const publicRoutes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     loadChildren: () =>
       import('./features/home/home.routes').then((feature) => feature.HOME_ROUTES),
   },
@@ -64,9 +67,56 @@ export const routes: Routes = [
         (feature) => feature.LEETCODE_STATS_ROUTES,
       ),
   },
+];
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: publicRoutes,
+  },
   {
     path: 'admin',
     loadChildren: () =>
       import('./features/admin/admin.routes').then((feature) => feature.ADMIN_ROUTES),
   },
+  ...(environment.production
+    ? []
+    : [
+        {
+          path: '_design-system',
+          children: [
+            {
+              path: '',
+              component: MainLayoutComponent,
+              children: [
+                {
+                  path: '',
+                  pathMatch: 'full' as const,
+                  loadComponent: () =>
+                    import('./shared/design-system-showcase/design-system-showcase').then(
+                      (component) => component.DesignSystemShowcaseComponent,
+                    ),
+                },
+              ],
+            },
+            {
+              path: 'admin',
+              loadComponent: () =>
+                import('./layout/admin-layout/admin-layout').then(
+                  (layout) => layout.AdminLayoutComponent,
+                ),
+              children: [
+                {
+                  path: '',
+                  loadComponent: () =>
+                    import('./shared/design-system-showcase/design-system-showcase').then(
+                      (component) => component.DesignSystemShowcaseComponent,
+                    ),
+                },
+              ],
+            },
+          ],
+        },
+      ]),
 ];

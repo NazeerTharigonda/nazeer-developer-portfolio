@@ -2,14 +2,14 @@
 
 ## Goals and decisions
 
-- **Standalone Angular:** Angular 21 standalone APIs are the default. The bootstrap component is intentionally only a `RouterOutlet`; it contains no page UI or application behavior.
+- **Standalone Angular:** Angular 21 standalone APIs are the default. The bootstrap component hosts the router and global toast viewport; route content stays in standalone layout and feature components.
 - **Feature-oriented organization:** Route boundaries and future domain code live together under `src/app/features/`. Shared code is extracted only when multiple features need it.
 - **Client-rendered SPA:** The Angular application builder produces static browser assets. Netlify's redirect rule supports direct navigation to client-side URLs. SSR and prerendering are not enabled.
-- **Lazy routing:** Public areas and the admin area are loaded through separate `loadChildren` boundaries. Their route arrays are empty by design until real pages are implemented.
+- **Lazy routing:** Public areas and the admin area are loaded through separate `loadChildren` boundaries under their respective layout shells. Feature leaf route arrays remain empty until real pages are implemented.
 - **Angular-native state:** Angular Signals are available for local or feature state when needed. No state-management package is introduced.
 - **Central configuration:** `app.config.ts` composes application providers; environment-specific API URLs are bound to `API_BASE_URL`.
 - **No frontend secrets:** Environment files are compiled into public JavaScript. Secret credentials belong on a trusted backend, never in the browser bundle.
-- **Minimal foundations:** Add folders and abstractions when there is real code to organize. Do not create speculative services, guards, interceptors, or placeholder pages.
+- **Design system boundary:** Shared design primitives, layout shells, tokens, and theme behavior are separate from portfolio feature pages and business logic. Do not add speculative integrations or placeholder feature functionality.
 
 ## Folder responsibilities
 
@@ -17,7 +17,15 @@
 src/
 ├── app/
 │   ├── core/
-│   │   └── config/              # Application-wide tokens and configuration
+│   │   ├── config/              # Application-wide tokens and configuration
+│   │   ├── notifications/       # Global toast presentation service
+│   │   └── theme/               # System-aware theme preference and state
+│   ├── layout/
+│   │   ├── admin-layout/        # Responsive administration shell
+│   │   └── main-layout/         # Public header, navigation, and footer
+│   ├── shared/
+│   │   ├── design-system-showcase/ # Development-only visual preview
+│   │   └── ui/                  # Reusable standalone visual primitives
 │   ├── features/                # Independently routed business capabilities
 │   │   ├── admin/               # Future admin route group and admin-only features
 │   │   ├── home/
@@ -34,13 +42,15 @@ src/
 │   ├── app.config.ts            # Root providers, router, and HTTP setup
 │   ├── app.routes.ts            # Top-level lazy route boundaries
 │   ├── app.ts                   # Minimal standalone bootstrap component
-│   └── app.html                 # Root router outlet
+│   └── app.html                 # Root router outlet and global toast viewport
 ├── environments/                # Build-time, non-secret environment values
 ├── styles/
 │   ├── abstracts/               # Sass variables and mixins
 │   ├── base/                    # Reset and typography defaults
-│   ├── themes/                  # Theme-level defaults and future tokens
-│   └── utilities/               # Small global utility classes
+│   ├── components/              # Global native form-control styles
+│   ├── themes/                  # Theme-level defaults and tokens
+│   ├── utilities/               # Small global utility classes
+│   └── _motion.scss             # Shared keyframes and motion utilities
 ├── index.html
 ├── main.ts
 └── styles.scss                  # Global Sass module entry point
@@ -52,7 +62,7 @@ The tree shows current route foundations and the responsibilities of the establi
 
 - **Core:** Single-instance application services, route guards, HTTP interceptors, and app-wide configuration. Keep it small; a feature-specific service stays in that feature.
 - **Shared:** Reusable presentational components, directives, pipes, types, and pure utilities that have multiple consumers. Shared code should not depend on feature implementations.
-- **Layout:** Public/admin shells when real navigation and layout needs exist. Keep layout components free of feature business logic.
+- **Layout:** `main-layout/` and `admin-layout/` provide independent public/admin shells. Keep layout components free of feature business logic.
 - **Features:** Each feature owns its route config and, when needed, its pages, components, models, and data-access services. Feature code should not reach into another feature's internals.
 - **Global styles:** Sass abstracts are included by modules that need them. Component styles should be colocated with their Angular component rather than collected into a global component stylesheet.
 
@@ -69,7 +79,7 @@ features/projects/
 └── projects.routes.ts
 ```
 
-The current route files export empty `Routes` arrays. This preserves the route ownership and lazy-loading boundaries without introducing dummy pages or behavior.
+Feature leaf route files export empty `Routes` arrays. The admin route group owns its layout shell and nested lazy boundaries; no feature pages or business behavior are added.
 
 ## Routing strategy
 
@@ -96,7 +106,7 @@ When admin authentication is introduced, add appropriate guards at the admin rou
 
 ## Configuration strategy
 
-- `src/app/app.config.ts` is the single root provider composition point. It registers the router, `HttpClient`, and Angular's browser error listeners.
+- `src/app/app.config.ts` is the single root provider composition point. It registers the router, `HttpClient`, Angular's browser error listeners, and initializes the theme preference.
 - `src/app/core/config/api.config.ts` declares the typed `API_BASE_URL` injection token.
 - `src/environments/environment.development.ts` is selected by the development build; `environment.ts` is the production/default build configuration. Both define `production` and `apiBaseUrl`.
 - Leave `apiBaseUrl` empty until a real API URL is known. A backend URL is public configuration, not a credential. Do not store secrets in environment files.
@@ -107,13 +117,17 @@ When admin authentication is introduced, add appropriate guards at the admin rou
 
 `src/styles.scss` is the global Sass entry point and uses Sass modules (`@use`/`@forward`):
 
-- `abstracts/`: shared variables and mixins; abstracts emit no global CSS.
-- `base/`: a small reset and neutral typography defaults.
-- `themes/`: system color-scheme support; add semantic light/dark tokens when a visual design is chosen.
-- `utilities/`: narrowly scoped, reusable global utilities.
+- `abstracts/`: centralized breakpoint, typeface, layout, and motion Sass values plus mixins; abstracts emit no global CSS.
+- `base/`: reset, focus, reduced-motion defaults, and semantic typography.
+- `themes/`: dark/light semantic color, type, spacing, radius, elevation, layout, and motion custom properties.
+- `components/`: shared form-control and tooltip styling.
+- `utilities/`: narrowly scoped container, layout, and text utilities.
+- `_motion.scss`: reusable transform/opacity keyframes and motion preset classes.
 - Component-level styles are scoped and colocated with the component under its feature or shared component folder.
 
-Keep design tokens semantic (for example, surface, text, and accent roles) rather than scattering literal values across components. Avoid global selectors for feature-specific presentation.
+Use `ThemeService` for persisted light/dark preference with system preference as the default. Keep design tokens semantic rather than scattering literal values across components. See `DESIGN-SYSTEM.md`, `COMPONENT-GUIDELINES.md`, and `THEME-GUIDELINES.md` for the token contract and shared component APIs.
+
+The public and admin route groups render through separate shared layout shells. Development-only showcase routes (`/_design-system` and `/_design-system/admin`) preview the system inside each shell. They are not part of production routes and contain no portfolio feature content.
 
 ## Coding and quality conventions
 

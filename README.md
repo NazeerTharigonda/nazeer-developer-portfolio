@@ -1,8 +1,8 @@
 # Nazeer Developer Portfolio
 
-A production-oriented foundation for a personal developer portfolio built with Angular 21. The repository establishes standalone application setup, feature-oriented lazy route boundaries, environment configuration, SCSS organization, code-quality tools, and Netlify SPA deployment settings.
+A production-oriented foundation for a personal developer portfolio built with Angular 21. The repository establishes standalone application setup, lazy feature routes, the Obsidian Luxe design system, reusable accessible UI components, public/admin layout shells, environment configuration, code-quality tools, and Netlify SPA deployment settings.
 
-> This repository is intentionally an architecture foundation: route arrays are empty and no portfolio pages, UI features, authentication, or backend integrations are implemented.
+> Portfolio feature routes remain empty. This foundation includes shared visual components and layout scaffolding, but no portfolio pages, business functionality, authentication, or backend integrations.
 
 ## Technology stack
 
@@ -22,7 +22,15 @@ The application is organized by feature. Application-wide configuration lives in
 src/
 ├── app/
 │   ├── core/
-│   │   └── config/
+│   │   ├── config/
+│   │   ├── notifications/
+│   │   └── theme/
+│   ├── layout/
+│   │   ├── admin-layout/
+│   │   └── main-layout/
+│   ├── shared/
+│   │   ├── design-system-showcase/
+│   │   └── ui/
 │   ├── features/
 │   │   ├── about/
 │   │   ├── admin/
@@ -44,6 +52,7 @@ src/
 ├── styles/
 │   ├── abstracts/
 │   ├── base/
+│   ├── components/
 │   ├── themes/
 │   └── utilities/
 ├── index.html
@@ -52,6 +61,8 @@ src/
 ```
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for folder responsibilities, routing and configuration decisions, conventions, and guidance for adding features.
+
+Design decisions and component APIs are documented in [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md), [COMPONENT-GUIDELINES.md](./COMPONENT-GUIDELINES.md), and [THEME-GUIDELINES.md](./THEME-GUIDELINES.md). Run the development server and open `/_design-system` to inspect the design system within the public shell or `/_design-system/admin` to preview it within the admin shell; both routes are excluded from production builds.
 
 ## Development setup
 
@@ -102,7 +113,7 @@ The root `netlify.toml` configures `npm run build`, publishes `dist/nazeer-devel
 
 ## Future development roadmap
 
-1. Implement public portfolio pages and shared/main layout.
+1. Implement public portfolio pages using the shared UI system and public layout shell.
 2. Add feature-local models, services, tests, and accessible UI as requirements emerge.
 3. Integrate GitHub and LeetCode data through appropriately configured APIs.
 4. Add a backend API (for example Node.js or Spring Boot) and connect it to PostgreSQL; the browser must not connect directly to the database.
